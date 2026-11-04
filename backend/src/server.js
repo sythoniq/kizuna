@@ -1,21 +1,18 @@
 const cors = require("cors")
+
 const express = require("express")
-const app = express()
+const server = express()
 
-app.use(cors())
-
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+server.use(cors())
+server.use(express.json())
+server.use(express.urlencoded({ extended: false }))
 
 const root = require("./routes/root.js")
+server.use("/", root)
 
-app.use("/", root)
-
-app.listen(3000, (error) => {
-	if (error) {
-		console.error(error)
+server.listen(3000, (err) => {
+	if (err) {
+		console.error("Unexpected error: ", err)
 	}
-
-	console.log("Server running on 3000")
+	console.log("Server is live on 3000")
 })
-

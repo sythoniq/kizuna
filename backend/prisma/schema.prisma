@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id    Int     @id @default(autoincrement())
+  user_email String  @unique
+  user_name  String?
+  user_hash  String
+
+  createdAt DateTime @default(now())
+
+  target_connection Connections[] @relation("Target Connection User")
+  connection        Connections[] @relation("Connection User")
+
+  posts    Posts[]
+  comments Comments[]
+}
+
+model Connections {
+  connection_id Int @id @default(autoincrement())
+
+  // The person that is to be followed
+  target    User @relation("Target Connection User", fields: [target_id], references: [user_id], onDelete: Cascade)
+  target_id Int
+
+  // The person initiating the following/befriending...
+  user    User @relation("Connection User", fields: [user_id], references: [user_id])
+  user_id Int
+
+  status       String
+  connected_at DateTime @default(now())
+}
+
+model Posts {
+  post_id      Int      @id @default(autoincrement())
+  post_content String
+  post_likes   Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  post_author User @relation(fields: [author_id], references: [user_id])
+  author_id   Int
+
+  post_comment Comments @relation(fields: [comment_id], references: [comment_id], onDelete: Cascade)
+  comment_id   Int
+}
+
+model Comments {
+  comment_id   Int    @id @default(autoincrement())
+  comment_body String
+
+  comment_author User    @relation(fields: [author_id], references: [user_id])
+  author_id      Int
+  posts          Posts[]
+}
+

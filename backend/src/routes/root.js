@@ -1,11 +1,18 @@
 const { Router } = require("express")
 const root = Router()
+const controller = require("../controllers/rootController.js")
+const validator = require("../utils/validator.js")
 
-const controller = require("../controllers/rootCont.js")
-const validator = require("../utils/validation.js")
+root.post("/register", 
+	validator.validateUser, 
+	validator.handleValidationError,
+	controller.registerUser
+)
 
-// Authentication routes for the end user...
-root.post("/register", validator.validateUser, controller.registerUser)
-root.post("/login", validator.validateUser, controller.loginUser)
+root.post("/login", 
+	validator.validateUser, 
+	validator.handleValidationError,
+	controller.loginUser
+)
 
 module.exports = root;
