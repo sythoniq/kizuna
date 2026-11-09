@@ -43,19 +43,19 @@ model Posts {
   post_likes   Int      @default(0)
   createdAt    DateTime @default(now())
 
-  post_author User @relation(fields: [author_id], references: [user_id])
+  post_author User @relation(fields: [author_id], references: [user_id], onDelete: Cascade)
   author_id   Int
 
-  post_comment Comments @relation(fields: [comment_id], references: [comment_id], onDelete: Cascade)
-  comment_id   Int
+  post_comments Comments[]
 }
 
 model Comments {
   comment_id   Int    @id @default(autoincrement())
   comment_body String
 
-  comment_author User    @relation(fields: [author_id], references: [user_id])
+  comment_author User @relation(fields: [author_id], references: [user_id], onDelete: Cascade)
   author_id      Int
-  posts          Posts[]
-}
 
+  commented_on Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  post_id      Int
+}

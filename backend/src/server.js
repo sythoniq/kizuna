@@ -8,7 +8,9 @@ server.use(express.json())
 server.use(express.urlencoded({ extended: false }))
 
 const root = require("./routes/root.js")
+const posts = require("./routes/posts.js")
 server.use("/", root)
+server.use("/posts", posts)
 
 server.listen(3000, (err) => {
 	if (err) {
